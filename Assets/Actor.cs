@@ -86,6 +86,8 @@ public class Actor : MonoBehaviour {
 
     public Position boardPosition;
 
+    // TODO: Provide some means of configuring how the target is selected
+
     #endregion
 
     #region Private member variables
@@ -94,26 +96,40 @@ public class Actor : MonoBehaviour {
 
     #endregion
 
+    #region Unity events (do not change)
 
-    // Use this for initialization
-    void Start () {
+    void Start()
+    {
         boardData = GameObject.FindGameObjectWithTag("Board").GetComponent<BoardData>();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-        List<Actor> availableTargets = GetAvailableTargets();
-        currentTarget = null;
+    }
+
+    void Update()
+    {
+        currentTarget = RefreshTargetSelection(GetAvailableTargets());
+    }
+
+    #endregion
+
+    /// <summary>
+    /// Modify this function however you need to. The main challenge of this project
+    /// is to create a form-based means of authoring the AI for each actor based on
+    /// the targets they can currently reach. This function receives a list of 
+    /// available targets, and should choose an appropriate target based on how the
+    /// designer has configured the AI.
+    /// 
+    /// How you implement this is up to you. Refer to the project requirements for
+    /// what it has to be able to do.
+    /// </summary>
+    Actor RefreshTargetSelection(List<Actor> availableTargets)
+    {
         if (availableTargets.Count == 0)
         {
-            //print("No available targets for " + transform.name);
-            return;
+            return null;
         }
         switch (targetSelectionRule)
         {
             case TargetSelectionRule.AnyAvailable:
-                currentTarget = availableTargets[Random.Range(0, availableTargets.Count)];
-                break;
+                return availableTargets[Random.Range(0, availableTargets.Count)];
             case TargetSelectionRule.HighestHealth:
                 int highestHealth = 0;
                 for (int i = 0; i < availableTargets.Count; i++)
@@ -123,21 +139,22 @@ public class Actor : MonoBehaviour {
                 for (int i = 0; i < availableTargets.Count; i++)
                     if (availableTargets[i].hitPoints == highestHealth)
                         highestHealthIndexes.Add(i);
-                currentTarget = availableTargets[highestHealthIndexes[Random.Range(0, highestHealthIndexes.Count)]];
-                break;
+                return availableTargets[highestHealthIndexes[Random.Range(0, highestHealthIndexes.Count)]];
             case TargetSelectionRule.StrongestAttack:
                 int highestAttack = 0;
                 for (int i = 0; i < availableTargets.Count; i++)
                     if (availableTargets[i].damage > highestAttack)
-                        highestAttack = availableTargets[i].hitPoints;
+                        highestAttack = availableTargets[i].damage;
                 List<int> highestAttackIndexes = new List<int>();
                 for (int i = 0; i < availableTargets.Count; i++)
                     if (availableTargets[i].damage == highestAttack)
                         highestAttackIndexes.Add(i);
-                currentTarget = availableTargets[highestAttackIndexes[Random.Range(0, highestAttackIndexes.Count)]];
-                break;
+                return availableTargets[highestAttackIndexes[Random.Range(0, highestAttackIndexes.Count)]];
         }
-	}
+        return availableTargets[Random.Range(0, availableTargets.Count)];
+    }
+
+    #region Target selection core (do not change)
 
     BoardData.Side MySide { get { return (BoardData.Side)System.Enum.Parse(typeof(BoardData.Side), boardPosition.ToString().Split('_')[0]); } }
     BoardData.Rank MyRank { get { return (BoardData.Rank)System.Enum.Parse(typeof(BoardData.Rank), boardPosition.ToString().Split('_')[1]); } }
@@ -156,7 +173,7 @@ public class Actor : MonoBehaviour {
             // If I'm in the back row and anybody is in front of me, I cannot attack.
             if (MyRank == BoardData.Rank.rear)
             {
-                if (boardData.GetActorByPosition(MySide, BoardData.Rank.front, BoardData.Line.top) != null 
+                if (boardData.GetActorByPosition(MySide, BoardData.Rank.front, BoardData.Line.top) != null
                     || boardData.GetActorByPosition(MySide, BoardData.Rank.front, BoardData.Line.center) != null
                     || boardData.GetActorByPosition(MySide, BoardData.Rank.front, BoardData.Line.bottom) != null)
                 {
@@ -212,4 +229,8 @@ public class Actor : MonoBehaviour {
         }
         return result;
     }
+
+    #endregion
+
+
 }

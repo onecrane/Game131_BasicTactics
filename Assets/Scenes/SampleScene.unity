@@ -376,8 +376,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a94b9ab40cc19b445b7fe0d6d591ec0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetSelectionRule: 0
-  currentTarget: {fileID: 0}
+  targetSelectionRule: 2
+  currentTarget: {fileID: 916292714}
   actorName: Skeleton
   maxHitPoints: 100
   hitPoints: 100
@@ -1464,8 +1464,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetSelectionRule: 0
-  currentTarget: {fileID: 0}
-  actorName: Fighter
+  currentTarget: {fileID: 147497486}
+  actorName: Knight
   maxHitPoints: 100
   hitPoints: 100
   initiative: 50
@@ -2050,7 +2050,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Fighter
+  m_Text: 'Knight
 
     100/100'
 --- !u!222 &1496006392
