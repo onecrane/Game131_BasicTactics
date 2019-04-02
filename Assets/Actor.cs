@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[ExecuteInEditMode]
 public class Actor : MonoBehaviour {
 
     public string actorName;
 
     public int maxHitPoints = 100;
     public int hitPoints = 100;
+
+    public int initiative = 50;
 
     public enum ActionTarget
     {
@@ -39,6 +42,7 @@ public class Actor : MonoBehaviour {
         Water,
         Air
     }
+    public ActionSource actionEffectSource;
 
     public ActionSource[] immunities;
 
@@ -65,7 +69,7 @@ public class Actor : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        boardData = GameObject.FindGameObjectWithTag("BoardData").GetComponent<BoardData>();
+        boardData = GameObject.FindGameObjectWithTag("Board").GetComponent<BoardData>();
 	}
 	
 	// Update is called once per frame
