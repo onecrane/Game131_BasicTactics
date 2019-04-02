@@ -5,12 +5,18 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class Actor : MonoBehaviour {
 
-    public string actorName;
+    #region Enums
 
-    public int maxHitPoints = 100;
-    public int hitPoints = 100;
+    public enum TargetSelectionRule
+    {
+        AnyAvailable,
+        HighestHealth,
+        StrongestAttack
+    }
+    public TargetSelectionRule targetSelectionRule;
 
-    public int initiative = 50;
+    [Tooltip("Don't change this property; it should be read-only.")]
+    public Actor currentTarget;
 
     public enum ActionTarget
     {
@@ -20,9 +26,6 @@ public class Actor : MonoBehaviour {
         AllEnemy,
         AllAlly
     }
-    public ActionTarget actionTarget;
-
-    public int damage = 25;
 
     public enum ActionEffect
     {
@@ -30,7 +33,6 @@ public class Actor : MonoBehaviour {
         Disable,
         Heal
     }
-    public ActionEffect actionEffect;
 
     public enum ActionSource
     {
@@ -42,11 +44,6 @@ public class Actor : MonoBehaviour {
         Water,
         Air
     }
-    public ActionSource actionEffectSource;
-
-    public ActionSource[] immunities;
-
-    public int percentChanceToHit = 75;
 
     public enum Position
     {
@@ -63,9 +60,40 @@ public class Actor : MonoBehaviour {
         right_front_bottom,
         right_front_top,
     }
+
+    #endregion
+
+    #region Configurable member variables
+
+    public string actorName;
+
+    public int maxHitPoints = 100;
+    public int hitPoints = 100;
+
+    public int initiative = 50;
+
+    public ActionTarget actionTarget;
+
+    public int damage = 25;
+
+    public ActionEffect actionEffect;
+
+    public ActionSource actionEffectSource;
+
+    public ActionSource[] immunities;
+
+    public int percentChanceToHit = 75;
+
     public Position boardPosition;
 
+    #endregion
+
+    #region Private member variables
+
     private BoardData boardData;
+
+    #endregion
+
 
     // Use this for initialization
     void Start () {
@@ -74,7 +102,41 @@ public class Actor : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+        List<Actor> availableTargets = GetAvailableTargets();
+        currentTarget = null;
+        if (availableTargets.Count == 0)
+        {
+            //print("No available targets for " + transform.name);
+            return;
+        }
+        switch (targetSelectionRule)
+        {
+            case TargetSelectionRule.AnyAvailable:
+                currentTarget = availableTargets[Random.Range(0, availableTargets.Count)];
+                break;
+            case TargetSelectionRule.HighestHealth:
+                int highestHealth = 0;
+                for (int i = 0; i < availableTargets.Count; i++)
+                    if (availableTargets[i].hitPoints > highestHealth)
+                        highestHealth = availableTargets[i].hitPoints;
+                List<int> highestHealthIndexes = new List<int>();
+                for (int i = 0; i < availableTargets.Count; i++)
+                    if (availableTargets[i].hitPoints == highestHealth)
+                        highestHealthIndexes.Add(i);
+                currentTarget = availableTargets[highestHealthIndexes[Random.Range(0, highestHealthIndexes.Count)]];
+                break;
+            case TargetSelectionRule.StrongestAttack:
+                int highestAttack = 0;
+                for (int i = 0; i < availableTargets.Count; i++)
+                    if (availableTargets[i].damage > highestAttack)
+                        highestAttack = availableTargets[i].hitPoints;
+                List<int> highestAttackIndexes = new List<int>();
+                for (int i = 0; i < availableTargets.Count; i++)
+                    if (availableTargets[i].damage == highestAttack)
+                        highestAttackIndexes.Add(i);
+                currentTarget = availableTargets[highestAttackIndexes[Random.Range(0, highestAttackIndexes.Count)]];
+                break;
+        }
 	}
 
     BoardData.Side MySide { get { return (BoardData.Side)System.Enum.Parse(typeof(BoardData.Side), boardPosition.ToString().Split('_')[0]); } }
@@ -110,8 +172,10 @@ public class Actor : MonoBehaviour {
 
                 // I can always hit the center...
                 Actor candidate = boardData.GetActorByPosition(enemySide, targetRank, BoardData.Line.center);
-                if (candidate != null) result.Add(candidate);
-
+                if (candidate != null)
+                {
+                    result.Add(candidate);
+                }
                 // ... and my own line (applicable only if I'm not at the center).
                 if (MyLine != BoardData.Line.center)
                 {

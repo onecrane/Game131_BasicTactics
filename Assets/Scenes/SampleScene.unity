@@ -376,6 +376,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a94b9ab40cc19b445b7fe0d6d591ec0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetSelectionRule: 0
+  currentTarget: {fileID: 0}
   actorName: Skeleton
   maxHitPoints: 100
   hitPoints: 100
@@ -1461,6 +1463,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a94b9ab40cc19b445b7fe0d6d591ec0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetSelectionRule: 0
+  currentTarget: {fileID: 0}
   actorName: Fighter
   maxHitPoints: 100
   hitPoints: 100
