@@ -15,9 +15,6 @@ public class Actor : MonoBehaviour {
     }
     public TargetSelectionRule targetSelectionRule;
 
-    [Tooltip("Don't change this property; it should be read-only.")]
-    public Actor currentTarget;
-
     public enum ActionTarget
     {
         MeleeEnemy,
@@ -87,6 +84,11 @@ public class Actor : MonoBehaviour {
     public Position boardPosition;
 
     // TODO: Provide some means of configuring how the target is selected
+
+
+    [Tooltip("Don't change this property; it should be read-only.")]
+    public Actor currentTarget;
+
 
     #endregion
 
