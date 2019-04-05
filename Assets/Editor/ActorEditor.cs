@@ -14,6 +14,7 @@ public class ActorEditor : Editor
 
         Actor.ActionSource[] sourceValues = Enum.GetValues(typeof(Actor.ActionSource)) as Actor.ActionSource[];
         string[] sourceNames = Enum.GetNames(typeof(Actor.ActionSource));
+        for (int i = 0; i < sourceNames.Length; i++) sourceNames[i] += '\t';
 
         SelectionList<Actor.ActionSource> sources = new SelectionList<Actor.ActionSource>(sourceValues, sourceNames);
         myActor.actionEffectSource = sources.RadioList("Action Source", myActor.actionEffectSource, 3);
@@ -23,6 +24,7 @@ public class ActorEditor : Editor
 
 }
 
+// Repo URL: https://github.com/onecrane/Game131_BasicTactics
 
 class SelectionList<T> where T : IComparable
 {
@@ -74,25 +76,27 @@ class SelectionList<T> where T : IComparable
         _selectedValue = initialSelection;
         bool anyChecked = false;
 
+        // TWo controls rendered: The label, and a vertical section
         EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.LabelField(label, GUILayout.MaxWidth(100));
 
-        EditorGUILayout.BeginVertical();
-        for (int r = 0; r < _values.Length; r += itemsPerRow)
-        {
-            EditorGUILayout.BeginHorizontal();
-            for (int i = r; i < r + itemsPerRow && i < _values.Length; i++)
+            EditorGUILayout.LabelField(label, GUILayout.MaxWidth(100));
+
+            EditorGUILayout.BeginVertical();
+            for (int r = 0; r < _values.Length; r += itemsPerRow)
             {
-                if (_values[i].CompareTo(initialSelection) == 0) originalSelectedValue = initialSelection;
-                if (GUILayout.Toggle(_values[i].CompareTo(_selectedValue) == 0, _labels[i]))
+                EditorGUILayout.BeginHorizontal();
+                for (int i = r; i < r + itemsPerRow && i < _values.Length; i++)
                 {
-                    _selectedValue = _values[i];
-                    anyChecked = true;
+                    if (_values[i].CompareTo(initialSelection) == 0) originalSelectedValue = initialSelection;
+                    if (GUILayout.Toggle(_values[i].CompareTo(_selectedValue) == 0, _labels[i]))
+                    {
+                        _selectedValue = _values[i];
+                        anyChecked = true;
+                    }
                 }
+                EditorGUILayout.EndHorizontal();
             }
-            EditorGUILayout.EndHorizontal();
-        }
-        EditorGUILayout.EndVertical();
+            EditorGUILayout.EndVertical();
 
         EditorGUILayout.EndHorizontal();
 
