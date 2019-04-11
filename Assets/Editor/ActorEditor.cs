@@ -4,21 +4,97 @@ using UnityEngine;
 using UnityEditor;
 using System;
 
+
 [CustomEditor(typeof(Actor))]
 public class ActorEditor : Editor
 {
+    private static GUIStyle errorBoxStyle = null;
 
+    private bool showDerivedProperties = false;
+
+    private static void InitializeStyles()
+    {
+        errorBoxStyle = new GUIStyle(EditorStyles.textField);        
+        errorBoxStyle.normal.background = Resources.Load<Texture2D>("Textures/txErrorBackground");
+    }
+
+    private DerivedStatList derivedStats;
     public override void OnInspectorGUI()
     {
-        Actor myActor = target as Actor;
+        if (errorBoxStyle == null) InitializeStyles();
 
-        Actor.ActionSource[] sourceValues = Enum.GetValues(typeof(Actor.ActionSource)) as Actor.ActionSource[];
-        string[] sourceNames = Enum.GetNames(typeof(Actor.ActionSource));
-        for (int i = 0; i < sourceNames.Length; i++) sourceNames[i] += '\t';
+        showDerivedProperties = EditorGUILayout.Foldout(showDerivedProperties, "Derived Properties");
+        if (showDerivedProperties)
+        {
+            derivedStats = AssetDatabase.LoadAssetAtPath("Assets/DerivedProperties.asset", typeof(DerivedStatList)) as DerivedStatList;
+            if (derivedStats == null)
+            {
+                UnityEngine.MonoBehaviour.print("Nope, not there");
+                derivedStats = ScriptableObject.CreateInstance<DerivedStatList>();
+                AssetDatabase.CreateAsset(derivedStats, "Assets/DerivedProperties.asset");
+                AssetDatabase.SaveAssets();
+            }
 
-        SelectionList<Actor.ActionSource> sources = new SelectionList<Actor.ActionSource>(sourceValues, sourceNames);
-        myActor.actionEffectSource = sources.RadioList("Action Source", myActor.actionEffectSource, 3);
-        myActor.immunities = sources.CheckboxList("Immunities", myActor.immunities, 3);
+            bool derivedPropEquationChanged = false;
+
+            EditorGUILayout.BeginVertical();
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("Name", GUILayout.Width(80));
+            EditorGUILayout.LabelField("Expression");
+            EditorGUILayout.LabelField("Current Value", GUILayout.MaxWidth(90));
+            EditorGUILayout.EndHorizontal();
+            
+            for (int i = 0; i < (derivedStats != null ? derivedStats.Length : 0); i++)
+            {
+                EditorGUILayout.BeginHorizontal();
+
+                derivedStats.list[i].statName = EditorGUILayout.TextField(derivedStats.list[i].statName, GUILayout.Width(80));
+
+                int derivedValue = 0;
+                string derivedEquationErrorMessage = string.Empty;
+                if (!ExpressionEvaluator.Evaluate<int>(derivedStats.list[i].expression, out derivedValue)) derivedEquationErrorMessage = "Invalid expression.";
+                string newDerivedPropEquation = EditorGUILayout.TextField(derivedStats.list[i].expression, derivedEquationErrorMessage.Length == 0 ? EditorStyles.textField : errorBoxStyle);
+                if (derivedEquationErrorMessage.Length > 0)
+                    GUI.Label(GUILayoutUtility.GetLastRect(), new GUIContent(string.Empty, derivedEquationErrorMessage));
+                else
+                    EditorGUILayout.LabelField(derivedValue.ToString(), GUILayout.MaxWidth(90));
+
+                if (newDerivedPropEquation != derivedStats.list[i].expression) derivedPropEquationChanged = true;
+
+                derivedStats.list[i].expression = newDerivedPropEquation;
+
+                EditorGUILayout.EndHorizontal();
+            }
+            EditorGUILayout.EndVertical();
+
+            bool added = false;
+            if (GUILayout.Button("Add"))
+            {
+                added = true;
+                if (derivedStats == null) derivedStats = new DerivedStatList();
+
+                List<DerivedStat> newDerivedStats;
+                if (derivedStats.list != null)
+                    newDerivedStats = new List<DerivedStat>(derivedStats.list);
+                else
+                    newDerivedStats = new List<DerivedStat>();
+                newDerivedStats.Add(new DerivedStat());
+                
+                derivedStats.list = newDerivedStats.ToArray();
+                this.Repaint();
+            }
+            if (GUI.changed || added)
+            {
+                EditorUtility.SetDirty(derivedStats);
+                serializedObject.ApplyModifiedProperties();
+                AssetDatabase.SaveAssets();
+            }
+
+            if (derivedPropEquationChanged) this.Repaint();
+
+        }
+
+
 
     }
 

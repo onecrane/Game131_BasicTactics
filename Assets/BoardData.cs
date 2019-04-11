@@ -4,7 +4,7 @@ using UnityEngine;
 
 [ExecuteInEditMode]
 public class BoardData : MonoBehaviour {
-
+    
     public enum Side
     {
         left,
