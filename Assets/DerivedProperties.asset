@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: DerivedProperties
   m_EditorClassIdentifier: 
   list:
-  - {fileID: 0}
+  - statName: 
+    expression: 

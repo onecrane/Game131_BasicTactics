@@ -16,7 +16,7 @@ public class DerivedStatList : ScriptableObject
 }
 
 [System.Serializable]
-public class DerivedStat : ScriptableObject
+public class DerivedStat
 {
     public string statName = string.Empty, expression = string.Empty;
 }
