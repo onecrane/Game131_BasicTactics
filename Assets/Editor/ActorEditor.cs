@@ -14,8 +14,10 @@ public class ActorEditor : Editor
 
     private static void InitializeStyles()
     {
-        errorBoxStyle = new GUIStyle(EditorStyles.textField);        
+        errorBoxStyle = new GUIStyle(EditorStyles.textField);
+
         errorBoxStyle.normal.background = Resources.Load<Texture2D>("Textures/txErrorBackground");
+
     }
 
     private DerivedStatList derivedStats;
@@ -23,7 +25,7 @@ public class ActorEditor : Editor
     {
         if (errorBoxStyle == null) InitializeStyles();
 
-        showDerivedProperties = EditorGUILayout.Foldout(showDerivedProperties, "Derived Properties");
+        showDerivedProperties = EditorGUILayout.Foldout(showDerivedProperties, new GUIContent("Derived Properties", "Properties based on static unit stats."));
         if (showDerivedProperties)
         {
             derivedStats = AssetDatabase.LoadAssetAtPath("Assets/DerivedProperties.asset", typeof(DerivedStatList)) as DerivedStatList;
@@ -33,7 +35,7 @@ public class ActorEditor : Editor
                 derivedStats = ScriptableObject.CreateInstance<DerivedStatList>();
                 AssetDatabase.CreateAsset(derivedStats, "Assets/DerivedProperties.asset");
                 AssetDatabase.SaveAssets();
-            }
+            } 
 
             bool derivedPropEquationChanged = false;
 
@@ -44,6 +46,8 @@ public class ActorEditor : Editor
             EditorGUILayout.LabelField("Current Value", GUILayout.MaxWidth(90));
             EditorGUILayout.EndHorizontal();
             
+
+
             for (int i = 0; i < (derivedStats != null ? derivedStats.Length : 0); i++)
             {
                 EditorGUILayout.BeginHorizontal();
@@ -52,7 +56,9 @@ public class ActorEditor : Editor
 
                 int derivedValue = 0;
                 string derivedEquationErrorMessage = string.Empty;
-                if (!ExpressionEvaluator.Evaluate<int>(derivedStats.list[i].expression, out derivedValue)) derivedEquationErrorMessage = "Invalid expression.";
+
+                if (!derivedStats.list[i].TryEvaluate((target as Actor), derivedStats, out derivedValue)) derivedEquationErrorMessage = "Invalid expression.";
+
                 string newDerivedPropEquation = EditorGUILayout.TextField(derivedStats.list[i].expression, derivedEquationErrorMessage.Length == 0 ? EditorStyles.textField : errorBoxStyle);
                 if (derivedEquationErrorMessage.Length > 0)
                     GUI.Label(GUILayoutUtility.GetLastRect(), new GUIContent(string.Empty, derivedEquationErrorMessage));
@@ -65,6 +71,9 @@ public class ActorEditor : Editor
 
                 EditorGUILayout.EndHorizontal();
             }
+
+
+
             EditorGUILayout.EndVertical();
 
             bool added = false;
@@ -83,6 +92,8 @@ public class ActorEditor : Editor
                 derivedStats.list = newDerivedStats.ToArray();
                 this.Repaint();
             }
+
+
             if (GUI.changed || added)
             {
                 EditorUtility.SetDirty(derivedStats);
@@ -93,6 +104,8 @@ public class ActorEditor : Editor
             if (derivedPropEquationChanged) this.Repaint();
 
         }
+
+        DrawDefaultInspector();
 
 
 

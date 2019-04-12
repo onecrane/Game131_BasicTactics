@@ -13,5 +13,13 @@ MonoBehaviour:
   m_Name: DerivedProperties
   m_EditorClassIdentifier: 
   list:
-  - statName: 
-    expression: 
+  - statName: first
+    expression: damage + 20
+  - statName: second
+    expression: (1 + 5) * 6
+  - statName: third
+    expression: 0
+  - statName: targetCount
+    expression: numtargets
+  - statName: damagePotential
+    expression: targetCount * damage

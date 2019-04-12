@@ -1300,6 +1300,123 @@ MonoBehaviour:
   effectLabel: {fileID: 0}
   stateOffset: {x: 1.45, y: 0, z: -2.76}
   myActor: {fileID: 0}
+--- !u!1 &890581365
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 890581370}
+  - component: {fileID: 890581369}
+  - component: {fileID: 890581368}
+  - component: {fileID: 890581367}
+  - component: {fileID: 890581366}
+  m_Layer: 0
+  m_Name: left_fighter_2
+  m_TagString: Actor
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &890581366
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 890581365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a94b9ab40cc19b445b7fe0d6d591ec0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetSelectionRule: 0
+  actorName: Brute
+  maxHitPoints: 100
+  hitPoints: 100
+  initiative: 50
+  actionTarget: 4
+  damage: 25
+  actionEffect: 0
+  actionEffectSource: 0
+  immunities: 
+  percentChanceToHit: 75
+  boardPosition: 5
+  currentTarget: {fileID: 890581366}
+--- !u!65 &890581367
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 890581365}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &890581368
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 890581365}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 3d6c50f1ac2ba45489863dbfd42606cc, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!33 &890581369
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 890581365}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &890581370
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 890581365}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -5.967, y: 0.5, z: 4.04}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &910798794
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1468,14 +1585,14 @@ MonoBehaviour:
   maxHitPoints: 100
   hitPoints: 100
   initiative: 50
-  actionTarget: 0
+  actionTarget: 4
   damage: 25
   actionEffect: 0
   actionEffectSource: 0
   immunities: 
   percentChanceToHit: 75
   boardPosition: 3
-  currentTarget: {fileID: 147497486}
+  currentTarget: {fileID: 916292714}
 --- !u!1001 &985104821
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1853,7 +1970,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 
+  m_Text: 'Brute
+
+    100/100'
 --- !u!222 &1274770188
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2147,7 +2266,7 @@ MonoBehaviour:
   stateLabel: {fileID: 1274770187}
   effectLabel: {fileID: 0}
   stateOffset: {x: 2.35, y: 0, z: -2.88}
-  myActor: {fileID: 0}
+  myActor: {fileID: 890581366}
 --- !u!1 &1645967229 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1329420496833700, guid: d5f15a8cc98f92a49ace4045e990c06f,

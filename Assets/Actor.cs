@@ -165,7 +165,7 @@ public class Actor : MonoBehaviour {
     BoardData.Rank MyRank { get { return (BoardData.Rank)System.Enum.Parse(typeof(BoardData.Rank), boardPosition.ToString().Split('_')[1]); } }
     BoardData.Line MyLine { get { return (BoardData.Line)System.Enum.Parse(typeof(BoardData.Line), boardPosition.ToString().Split('_')[2]); } }
 
-    List<Actor> GetAvailableTargets()
+    public List<Actor> GetAvailableTargets()
     {
         List<Actor> result = new List<Actor>();
         BoardData.Side enemySide = MySide == BoardData.Side.left ? BoardData.Side.right : BoardData.Side.left;
