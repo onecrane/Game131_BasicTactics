@@ -35,13 +35,20 @@ public class ActorEditor : Editor
                 derivedStats = ScriptableObject.CreateInstance<DerivedStatList>();
                 AssetDatabase.CreateAsset(derivedStats, "Assets/DerivedProperties.asset");
                 AssetDatabase.SaveAssets();
-            } 
+            }
+
+            int nameFieldWidth = 80;
+            for (int i = 0; i < derivedStats.Length; i++)
+            {
+                int statNameWidth = (int)EditorStyles.textField.CalcSize(new GUIContent(derivedStats.list[i].statName + " ")).x;
+                if (statNameWidth > nameFieldWidth) nameFieldWidth = statNameWidth;
+            }
 
             bool derivedPropEquationChanged = false;
 
             EditorGUILayout.BeginVertical();
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("Name", GUILayout.Width(80));
+            EditorGUILayout.LabelField("Name", GUILayout.Width(nameFieldWidth));
             EditorGUILayout.LabelField("Expression");
             EditorGUILayout.LabelField("Current Value", GUILayout.MaxWidth(90));
             EditorGUILayout.EndHorizontal();
@@ -52,11 +59,13 @@ public class ActorEditor : Editor
             {
                 EditorGUILayout.BeginHorizontal();
 
-                derivedStats.list[i].statName = EditorGUILayout.TextField(derivedStats.list[i].statName, GUILayout.Width(80));
+                // TODO: Watch out for repeats
+                derivedStats.list[i].statName = EditorGUILayout.TextField(derivedStats.list[i].statName, GUILayout.Width(nameFieldWidth));
 
                 int derivedValue = 0;
                 string derivedEquationErrorMessage = string.Empty;
 
+                // How to detect expression errors vs. circular definitions?
                 if (!derivedStats.list[i].TryEvaluate((target as Actor), derivedStats, out derivedValue)) derivedEquationErrorMessage = "Invalid expression.";
 
                 string newDerivedPropEquation = EditorGUILayout.TextField(derivedStats.list[i].expression, derivedEquationErrorMessage.Length == 0 ? EditorStyles.textField : errorBoxStyle);

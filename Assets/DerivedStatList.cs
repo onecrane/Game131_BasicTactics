@@ -20,6 +20,26 @@ public class DerivedStat
 {
     public string statName = string.Empty, expression = string.Empty;
 
+    public bool HasCircularReference(DerivedStatList derivedStats)
+    {
+        // Assumption: All stats have different names. (Enforceable?)
+        // (Append (1) (2) etc.? )
+
+        // TODO: Recursion
+        // Find derivedStat references within this expression
+        // For each, drill down into their derived stats; if we ever find
+        // the statName of this item, return true up the recursion.
+        //
+        // Is it necessary to check for infinite recursion, since
+        // by definition, if there is no circular reference,
+        // eventually we'll hit the bottom of the tree on all branches?
+
+
+        throw new System.NotImplementedException();
+
+    }
+
+
     public bool TryEvaluate(Actor actor, DerivedStatList derivedStats, out int outcome)
     {
         Dictionary<string, int> statSubs = new Dictionary<string, int>();
@@ -35,6 +55,7 @@ public class DerivedStat
         string workbench = expression.ToUpper();
         foreach (string k in statSubs.Keys) workbench = workbench.Replace(k, statSubs[k].ToString());
 
+        // TODO: Watch out for circular definitions
         if (derivedStats != null)
         {
             for (int i = 0; i < derivedStats.Length; i++)
