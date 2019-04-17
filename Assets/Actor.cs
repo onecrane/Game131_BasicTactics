@@ -42,7 +42,8 @@ public class Actor : MonoBehaviour {
         Fire,
         Earth,
         Water,
-        Air
+        Air,
+        Mind
     }
 
     public enum Position
@@ -157,6 +158,43 @@ public class Actor : MonoBehaviour {
                 return availableTargets[highestAttackIndexes[Random.Range(0, highestAttackIndexes.Count)]];
         }
         return availableTargets[Random.Range(0, availableTargets.Count)];
+    }
+
+    public bool TryEvaluate(string propertyName, DerivedStatList derivedStats, out int result)
+    {
+        string propertyNameUpper = propertyName.Trim().ToUpper();
+
+        switch (propertyNameUpper)
+        {
+            case "MAXHP":
+                result = maxHitPoints;
+                return true;
+            case "HP":
+                result = hitPoints;
+                return true;
+            case "INITIATIVE":
+                result = initiative;
+                return true;
+            case "DAMAGE":
+                result = damage;
+                return true;
+            case "SOURCE":
+                result = (int)actionEffectSource;
+                return true;
+        }
+        
+        if (propertyName.StartsWith("IMMUNITIES[") && propertyName.EndsWith("]"))
+        {
+            result = 0;
+            int targetImmunity = int.Parse(propertyName.Replace("IMMUNITIES[", "").Replace("]", ""));
+            if (immunities == null) return true;
+            for (int i = 0; i < immunities.Length; i++) if ((int)immunities[i] == targetImmunity) result = 1;
+            return true;
+        }
+
+        result = 0;
+        return false;
+
     }
 
     #region Target selection core (do not change)

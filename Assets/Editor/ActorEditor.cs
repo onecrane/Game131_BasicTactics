@@ -10,14 +10,13 @@ public class ActorEditor : Editor
 {
     private static GUIStyle errorBoxStyle = null;
 
-    private bool showDerivedProperties = false;
+    private static bool showDerivedProperties = false;
 
     private static void InitializeStyles()
     {
         errorBoxStyle = new GUIStyle(EditorStyles.textField);
 
         errorBoxStyle.normal.background = Resources.Load<Texture2D>("Textures/txErrorBackground");
-
     }
 
     private DerivedStatList derivedStats;
@@ -25,6 +24,18 @@ public class ActorEditor : Editor
     {
         if (errorBoxStyle == null) InitializeStyles();
 
+        DisplayDerivedProperties();
+
+        // Selection controls
+
+        DrawDefaultInspector();
+
+
+
+    }
+
+    private void DisplayDerivedProperties()
+    {
         showDerivedProperties = EditorGUILayout.Foldout(showDerivedProperties, new GUIContent("Derived Properties", "Properties based on static unit stats."));
         if (showDerivedProperties)
         {
@@ -52,7 +63,7 @@ public class ActorEditor : Editor
             EditorGUILayout.LabelField("Expression");
             EditorGUILayout.LabelField("Current Value", GUILayout.MaxWidth(90));
             EditorGUILayout.EndHorizontal();
-            
+
 
 
             for (int i = 0; i < (derivedStats != null ? derivedStats.Length : 0); i++)
@@ -97,7 +108,7 @@ public class ActorEditor : Editor
                 else
                     newDerivedStats = new List<DerivedStat>();
                 newDerivedStats.Add(new DerivedStat());
-                
+
                 derivedStats.list = newDerivedStats.ToArray();
                 this.Repaint();
             }
@@ -114,12 +125,7 @@ public class ActorEditor : Editor
 
         }
 
-        DrawDefaultInspector();
-
-
-
     }
-
 }
 
 // Repo URL: https://github.com/onecrane/Game131_BasicTactics
